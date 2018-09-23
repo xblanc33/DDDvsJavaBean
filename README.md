@@ -1,6 +1,6 @@
 # Des Java Beans au DDD 
 
-Vers une approche moderne de la programmation orientée objet
+#### Vers une approche moderne de la programmation orientée objet
 
 L’objet de cet article est d’illustrer la force des concepts « modernes » du DDD et de les opposer aux principes « dépassés » des JavaBeans.
 Mon objectif est de présenter trois concepts importants du DDD (Value Object, Service, Entity) et d’expliquer la programmation moderne qu’ils permettent. A l’aide d’un exemple très simple, je vais leur opposer une conception JavaBeans.
