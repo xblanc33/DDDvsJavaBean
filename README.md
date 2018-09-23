@@ -146,12 +146,15 @@ public class TestTodo {
 }
 ```
 
-Quel est le problème me diriez-vous ?
-C’est : todo1.setDone(true)
+### Quel est le problème me diriez-vous ?
+
+**C’est : todo1.setDone(true)**
+
 En effet le problème principal est que le changement de l’état des Todo ne soit pas réalisé par TodoList mais par Todo. Autrement dit, TodoList n’est responsable que de l’ensemble des todo (add et remove) et pas de l’état des todo. 
 Si on veut changer cela, il faut alors encapsuler les Todo dans TodoList, et là, c’est très compliqué à coder. On pourrait faire en sorte que Todo soit une classe interne de TodoList mais ce n’est vraiment pas très lisible, et il faudrait gérer les types de retours. On pourrait demander à TodoList de faire une copie des Todo lors de l’ajout, et là encore cela va rendre le code très compliqué.
 
-Y-a-t-il un autre problème ?
+""" Y-a-t-il un autre problème ?
+
 C’est moins flagrant, mais les deux méthodes getUndoneTodo et getDoneTodo sont en fait des requêtes (des recherches) réalisées sur l’ensemble des Todo. On peut se poser la question de l’intérêt de les mettre dans la classe TodoList car finalement, elles n’ont besoin que d’une seule chose, c’est d’un ensemble de todo (List<Todo>).
 
 ## Conception DDD
@@ -217,6 +220,7 @@ public class Todo {
 
 Le code est très simple. Deux propriétés, initialisées à la construction, et des getters.
 J’ai recodé les méthodes equals, hashCode et toString car deux Todo sont identiques si et si seulement si leur description et leur réalisation sont identiques. Notons qu’il ne sert à rien de recoder ces méthodes dans le cas des JavaBeans car l’égalité des JavaBeans est portée par les identifiants Java.
+
 En suivant les principes du DDD, je construis un Service qui contient les deux méthodes de recherche.
 
 ``` java
@@ -326,4 +330,5 @@ On voit aussi que l’utilisation des Service se fait en mode Stateless ce qui p
 ## Ce qu’il faut retenir
 
 Avec cet exemple, mon intention est de vous montrer qu’il faut sortir de la conception « à la JavaBean ». Les concepts modernes exprimés, entre autres, par le DDD vous permettent d’explorer de nouvelles conceptions.
+
 Mon exemple de Todo avec le DDD est, de mon point de vue, beaucoup plus intéressant que celui avec les JavaBeans. Pour vous en convaincre davantage, essayez de mettre en place une méthode de notification permettant de savoir que le Todo d’une TodoList donné vient de changer. Avec le DDD, il faut simplement ajouter un système de notification sur la TodoList, en envoyant la notification dans le code de didIt. Avec les JavaBean le Todo a oublié dans quelle TodoList il est … C’est le fameux problème de l’amnésie du code.
