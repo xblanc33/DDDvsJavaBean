@@ -1,4 +1,4 @@
-package fr.ddd;
+package fr.jb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,7 +34,7 @@ public class TodoListShould {
         todos.addTodo(codeDamnIt);
 
         assertThatTodoListHas(1);
-        assertFalse(codeDamnIt.isDone());
+        assertFalse(codeDamnIt.getDone());
     }
 
     @Test
@@ -43,8 +43,8 @@ public class TodoListShould {
         todos.addTodo(codeDamnItTwice);
 
         assertThatTodoListHas(2);
-        assertFalse(codeDamnIt.isDone());
-        assertFalse(codeDamnItTwice.isDone());
+        assertFalse(codeDamnIt.getDone());
+        assertFalse(codeDamnItTwice.getDone());
     }
 
     @Test
@@ -52,12 +52,11 @@ public class TodoListShould {
         todos.addTodo(codeDamnIt);
         todos.addTodo(codeDamnItTwice);
 
-        todos.didIt(codeDamnIt);
+        codeDamnIt.setDone(true);
 
-        SearchTodo search = new SearchTodo();
-        List<Todo> undone = search.findUndoneTodo(todos.getTodoList());
+        List<Todo> undone = todos.getUndoneTodo();
         assertEquals(1, undone.size());
-        List<Todo> done = search.findDoneTodo(todos.getTodoList());
+        List<Todo> done = todos.getDoneTodo();
         assertEquals(1, done.size());
     }
 

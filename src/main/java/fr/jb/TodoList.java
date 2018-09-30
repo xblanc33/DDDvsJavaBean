@@ -40,4 +40,8 @@ public class TodoList {
         }
         return List;
     }
+
+    public boolean isEmpty() {
+        return todoList.isEmpty();
+    }
 }
