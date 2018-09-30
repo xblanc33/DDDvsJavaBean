@@ -8,7 +8,6 @@ public class Todo {
 
     public Todo(String description) {
         this.description = description;
-        this.isDone = false;
     }
 
     public Todo(String description, boolean isDone) {

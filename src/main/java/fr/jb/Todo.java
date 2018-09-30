@@ -4,13 +4,8 @@ public class Todo {
     private String description;
     private boolean done;
 
-    public Todo() {
-        this.done = false;
-    }
-
     public Todo(String description) {
         this.description = description;
-        this.done = false;
     }
 
     public String getDescription() {
