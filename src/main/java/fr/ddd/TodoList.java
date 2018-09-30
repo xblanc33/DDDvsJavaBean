@@ -29,4 +29,8 @@ public class TodoList {
         todoList.remove(index);
         todoList.add(index, new Todo(todo.getDescription(), true));
     }
+
+    public boolean isEmpty() {
+        return todoList.isEmpty();
+    }
 }
