@@ -13,7 +13,7 @@ public class SearchTodo {
     }
 
     private List<Todo> findTodo(boolean isDone, List<Todo> todoList) {
-        List<Todo> list = new ArrayList<Todo>();
+        List<Todo> list = new ArrayList<>();
         for (Todo todo : todoList) {
             if (todo.isDone() == isDone) {
                 list.add(todo);

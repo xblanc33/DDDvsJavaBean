@@ -7,11 +7,11 @@ public class TodoList {
     private List<Todo> todoList;
 
     public TodoList() {
-        todoList = new ArrayList<Todo>();
+        todoList = new ArrayList<>();
     }
 
     public List<Todo> getTodoList() {
-        return new ArrayList<Todo>(this.todoList);
+        return new ArrayList<>(this.todoList);
     }
 
     public void addTodo(Todo t) {
@@ -32,7 +32,7 @@ public class TodoList {
     }
 
     private List<Todo> getTodo(boolean isDone) {
-        List<Todo> List = new ArrayList<Todo>();
+        List<Todo> List = new ArrayList<>();
         for (Todo todo : todoList) {
             if (todo.getDone() == isDone) {
                 List.add(todo);

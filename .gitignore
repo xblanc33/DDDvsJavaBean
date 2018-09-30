@@ -4,3 +4,8 @@
 /build
 .classpath
 .project
+/.idea/*
+/gradle/*
+/gradlew
+/gradlew.bat
+/out/*

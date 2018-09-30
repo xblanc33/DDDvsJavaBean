@@ -7,11 +7,11 @@ public class TodoList {
     private List<Todo> todoList;
 
     public TodoList() {
-        todoList = new ArrayList<Todo>();
+        todoList = new ArrayList<>();
     }
 
     public List<Todo> getTodoList() {
-        return new ArrayList<Todo>(this.todoList);
+        return new ArrayList<>(this.todoList);
     }
 
     public void addTodo(Todo t) {
