@@ -169,16 +169,19 @@ La conception DDD est très moderne. Mon objectif est ici de n’en montrer qu�
 
 Le postulat est le suivant, certes tout est objet, mais tous les objets ne sont pas les mêmes. Il est important de distinguer certains types d'objet : **Value Object**, **Service** et **Entity**.
 
-Un **Value Object** est un objet qui représente une valeur et même une constante. L’exemple le plus utilisé est celui du point GPS avec la latitude et la longitude. Chaque point GPS est défini par sa latitude et sa longitude. Du coup, aucun intérêt à changer les valeurs (pas de setter).
+Un **Value Object** est un objet qui représente une valeur et même une constante. L’exemple le plus utilisé est celui du point GPS avec la latitude et la longitude. Chaque point GPS est défini par sa latitude et sa longitude. Du coup, il est immuable et il n'y a aucun intérêt à changer les valeurs (pas de setter et les champs en privée).
+Les Value Objects sont aussi des objets qui encapsulent des règles métiers, donc on attend voir des méthodes riches (pas anémique) à l'intérieur de ces objets et c'est là la grosse différence entre un Value Object et un Java Bean ou encore un DTO (Data Transfer Object).
 
 Un **Service** est un objet qui offre une ou plusieurs fonctions (stateless si possible). De fait on peut construire un Service, l’utiliser et le supprimer. Un service n’a pas réellement d’état, c’est juste un ensemble de fonctions.
+En DDD, on a deux types de services, Application Service et Domain Service. Application Service contient des cas d'utilisations et Domain Service c'est un service qui appartient uniquemnt au domaine métier et qu'on ne peut pas intégrer ni dans un Value Object ni dans une Entity.
+Dans notre exemple on parle bien d'un Application Service qui nous offre la possibilité de chercher des Todo "fait" et "pas fait". (Du coup il faut aussi un autre Application Service qui offre la possibilité de charger l'état d'un Todo de "à faire" à "fait").
 
-Un **Entity** est un objet qui est identifiable et qui a un état propre qui va changer. L’Entity est l’objet « noble » de la programmation orienté objet. Par contre, plutôt que des setter, il offre des méthodes métiers qui vont permettre d’exécuter l’application (on choisira des noms explicites pour ces méthodes).
+Un **Entity** est un objet qui est identifiable (contient un identifiat unique) et qui a un état propre qui va changer dans le temps. L’Entity est l’objet « noble » de la programmation orienté objet. Par contre, plutôt que des setter, il offre des méthodes métiers qui vont permettre d’exécuter l’application (on choisira des noms explicites pour ces méthodes).
 
 Une fois ces trois concepts connus, le DDD préconise l’utilisation de Value Object et de Service plutôt que d’Entity. En d’autres mots, il faut essayer de manipuler le plus possible de Value Object et de Service.
 
 En reprenant notre application, et en suivant à l’extrême le principe du DDD, on peut faire en sorte que le Todo soit une value object. On va donc considérer qu’il n’est pas possible de modifier un Todo après sa construction !
-
+Je ne suis pas d'accord, Todo est une Entity, il a un état qui change et il est unique car on ne peut pas ajouter le même Todo deux fois dans la liste.
 ``` java
 package fr.ddd;
 
@@ -262,7 +265,7 @@ public class SearchTodo {
 Là encore le code est relativement simple. J’ai une classe avec deux méthodes stateless. On pourrait même les mettre en static mais je préfère les laisser dans les objets.
 
 Pour finir, TodoList est une Entity. Il contient l’ensemble des Todo et surtout les méthodes permettant de dire qu’un Todo est fait (regardez le code, je supprime le Todo « à faire » et le remplace par un nouveau Todo « fait »).
-
+Je ne suis pas d'accord, TodoList est un service, il n'a pas d'état et n'a aucun comportement métier. Il nous offre juste deux possibilité de recherche.
 ``` java
 package fr.ddd;
 
@@ -298,7 +301,7 @@ public class TodoList {
 }
 ```
 
-Avec ce code, mon exemple devient :
+Avec ce code, mon test devient :
 
 ``` java
 package fr.ddd;
