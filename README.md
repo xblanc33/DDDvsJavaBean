@@ -4,11 +4,11 @@ _Vers une approche moderne de la programmation orientée objet_
 
 L’objet de cet article est d’illustrer la force des concepts « modernes » du DDD et de les opposer aux principes « dépassés » des JavaBeans.
 Mon objectif est de présenter trois concepts importants du DDD (Value Object, Service, Entity) et d’expliquer la programmation moderne qu’ils permettent. A l’aide d’un exemple très simple, je vais leur opposer une conception JavaBeans.
-En lisant cet article, vous allez pouvoir comprendre une partie des concepts du DDD (3 concepts) et mieux situer l’innovation de ces concepts par rapport à une programmation classique. Vous pourrez ainsi opposer ces concepts du DDD aux concepts classiques des JavaBeans. 
+En lisant cet article, vous allez pouvoir comprendre une partie des concepts du DDD dans la partie Tactical Design (3 concepts) et mieux situer l’innovation de ces concepts par rapport à une programmation classique. Vous pourrez ainsi opposer ces concepts du DDD aux concepts classiques des JavaBeans. 
 
 ## L’exemple : Les Todo
 
-Commençons par l’exemple : des Todo. L’objet est de pouvoir ajouter et supprimer des Todo dans une list. Puis de pouvoir dire qu’un todo est fait (qu’il n’est plus « à faire »). Enfin, on veut pouvoir afficher les todo à faire, et ceux déjà effectués.
+Commençons par l’exemple : des Todo. L’objet est de pouvoir ajouter et supprimer (ici on parle de supprimer mais dans le scénario on ne supprime aucun Todo. On voit également du code mort dans le code sur la méthode qui supprime un Todo) des Todo dans une liste. Puis de pouvoir dire qu’un Todo est fait (qu’il n’est plus « à faire »). Enfin, on veut pouvoir afficher les Todo à faire, et ceux déjà effectués.
 
 A titre de test, je propose le petit scenario suivant :
 
@@ -17,8 +17,8 @@ A titre de test, je propose le petit scenario suivant :
 3. Créer un deuxième Todo (« code twice damn it ») et l’ajouter dans la liste
 4. Vérifier qu’il y a bien 2 Todo
 5. Faire en sorte que le premier Todo soit fait
-6. Afficher les Todo à faire et vérifier qu’il n’y en a qu’un
-7. Afficher les Todo terminés et vérifier qu’il n’y en a qu’un
+6. Afficher (dans les tests on affiche rien, je te propose le verbe Determiner au lieu de Afficher) les Todo à faire et vérifier qu’il n’y en a qu’un
+7. Afficher (dans les tests on affiche rien, je te propose le verbe Determiner au lieu de Afficher) les Todo terminés et vérifier qu’il n’y en a qu’un
 
 ## Conception Java Bean
 
@@ -60,8 +60,11 @@ public class Todo {
 }
 ```
 
-Le code **Todo.java** est relativement simple. Deux propriétés avec des getter et des setter. A la limite, on peut considérer que la description ne va pas changer et donc supprimer setDescription.
-Notons enfin qu’à sa création, un Todo est « à faire » (this.isDone = false).
+Le code **Todo.java** est relativement simple. Deux propriétés avec des getter et des setter. A la limite, on peut considérer que la description ne va pas changer et donc supprimer setDescription (Dans ce cas je préfère qu'on le site dans le scénario ou bien on supprime setDescription(), ça serait bien qu'on ne laisse pas de nuances dans les règles métiers).
+Notons enfin qu’à sa création, un Todo est « à faire » (this.isDone = false) (Pas besoin de le préciser car c'est un type booléen et par défaut il a la valeur false).
+Nous constatons également que cette classe est anémique (sans comportement) et il est un bon candidat pour devenir un anti pattern Feature Envy. (on sent déjà le smell).
+Autre problème avec cette classe c'est qu'elle est dans la couche Business là où on attend des comportements et des règles métiers, donc encore une fois un smell.
+Visiblement cette toute petite classe est déjà un gros bout de viande qui est entrain de pourrir notre système.
 
 Pour concevoir **TodoList.java** j’ai besoin d’une liste de Todo (List<Todo>), du getter sur cette liste qui va retourner une copie de la liste, des méthodes pour ajouter et supprimer les todo, et enfin de deux méthodes pour obtenir les Todo à faire ou ceux terminés.
 
