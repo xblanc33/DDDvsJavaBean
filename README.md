@@ -1,14 +1,21 @@
-# Des Java Beans au DDD 
+# Des Java Beans au DDD
 
-_Vers une approche moderne de la programmation orientée objet_
+_Sortir de sa zone de confort_
 
-L’objet de cet article est d’illustrer la force des concepts « modernes » du DDD et de les opposer aux principes « dépassés » des JavaBeans.
-Mon objectif est de présenter trois concepts importants du DDD (Value Object, Service, Entity) et d’expliquer la programmation moderne qu’ils permettent. A l’aide d’un exemple très simple, je vais leur opposer une conception JavaBeans.
-En lisant cet article, vous allez pouvoir comprendre une partie des concepts du DDD dans la partie Tactical Design (3 concepts) et mieux situer l’innovation de ces concepts par rapport à une programmation classique. Vous pourrez ainsi opposer ces concepts du DDD aux concepts classiques des JavaBeans. 
+Le DDD, on en parle beaucoup.
+Ceux qui le pratiquent ne tarissent pas d'éloges.
+Mais qu'est-ce ? Et surtout, à quoi cela sert-il ?
+
+Plutôt que d'essayer de résumer le DDD en quelques lignes (mission impossible), l’objet de cet article vise plutôt à montrer qu'une programmation classique, à la JavaBean, rend irrémédiablement un code amnésique, et donc d'une pietre qualité.
+
+A l'inverse une programmation DDD remet le metier (domain) au centre des préoccupations et permet de réaliser un code qui est complètement aligné au métier.
+
+A l’aide d’un exemple très simple et en présentant quelques patterns tactiques (Value Object, Service, Entity), cet article propose un petite découverte du DDD.
+L'objectif est de mieux situer l’apport du DDD, par rapport à une programmation à la JavaBean.
 
 ## L’exemple : Les Todo
 
-Commençons par l’exemple : des Todo. L’objet est de pouvoir ajouter et supprimer (ici on parle de supprimer mais dans le scénario on ne supprime aucun Todo. On voit également du code mort dans le code sur la méthode qui supprime un Todo) des Todo dans une liste. Puis de pouvoir dire qu’un Todo est fait (qu’il n’est plus « à faire »). Enfin, on veut pouvoir afficher les Todo à faire, et ceux déjà effectués.
+Commençons par l’exemple : des Todo. L’objet est de pouvoir ajouter des Todo dans une liste. Puis de pouvoir dire qu’un Todo est fait (qu’il n’est plus « à faire »). Enfin, on veut pouvoir afficher les Todo à faire, et ceux déjà effectués.
 
 A titre de test, je propose le petit scenario suivant :
 
@@ -17,8 +24,8 @@ A titre de test, je propose le petit scenario suivant :
 3. Créer un deuxième Todo (« code twice damn it ») et l’ajouter dans la liste
 4. Vérifier qu’il y a bien 2 Todo
 5. Faire en sorte que le premier Todo soit fait
-6. Afficher (dans les tests on affiche rien, je te propose le verbe Determiner au lieu de Afficher) les Todo à faire et vérifier qu’il n’y en a qu’un
-7. Afficher (dans les tests on affiche rien, je te propose le verbe Determiner au lieu de Afficher) les Todo terminés et vérifier qu’il n’y en a qu’un
+6. Determiner les Todo à faire et vérifier qu’il n’y en a qu’un
+7. Determiner les Todo terminés et vérifier qu’il n’y en a qu’un
 
 ## Conception Java Bean
 
@@ -60,8 +67,8 @@ public class Todo {
 }
 ```
 
-Le code **Todo.java** est relativement simple. Deux propriétés avec des getter et des setter. A la limite, on peut considérer que la description ne va pas changer et donc supprimer setDescription (Dans ce cas je préfère qu'on le site dans le scénario ou bien on supprime setDescription(), ça serait bien qu'on ne laisse pas de nuances dans les règles métiers).
-Notons enfin qu’à sa création, un Todo est « à faire » (this.isDone = false) (Pas besoin de le préciser car c'est un type booléen et par défaut il a la valeur false).
+Le code **Todo.java** est relativement simple. Deux propriétés avec des getter et des setter. 
+Notons enfin qu’à sa création, un Todo est « à faire ».
 Nous constatons également que cette classe est anémique (sans comportement) et il est un bon candidat pour devenir un anti pattern Feature Envy. (on sent déjà le smell).
 Autre problème avec cette classe c'est qu'elle est dans la couche Business là où on attend des comportements et des règles métiers, donc encore une fois un smell.
 Visiblement cette toute petite classe est déjà un gros bout de viande qui est entrain de pourrir notre système.
@@ -151,19 +158,30 @@ public class TestTodo {
 
 ### Quel est le problème me diriez-vous ?
 
-**C’est : todo1.setDone(true)**
+Le problème est que ce code ne porte par de métier particulier, voir même il pourrait s'appliquer à n'importe quelle liste de todo.
+On pourrait même dire **qu'il est amnésique !** En effet, si le métier était précis lors de sa conception, il n'est aujourd'hui plus possible de le retrouver.
 
-En effet le problème principal est que le changement de l’état des Todo ne soit pas réalisé par TodoList mais par Todo.
+Pour mieux comprendre le "métier" de la toto liste (même si cette application est relativement simple), on peut se poser les questions suivantes :
 
-Autrement dit, TodoList n’est responsable que de l’ensemble des todo (add et remove) et pas de l’état des todo.
+* Quel est le cycle de vie d'un Todo ?
+* Quels sont les traitements applicables sur un Todo (opération métier) ?
+* La liste de Todo, est-ce juste une liste ou a-t-elle son propre cycle de vie ?
+* Si une liste a son propre cycle de vie, quels sont les traitements applicables ?
+* Enfin, quelle est la relation entre les todo et leur liste ? Est-ce que les todo d'une liste partagent des contraintes (leurs cycles de vie sont-ils liés ?)
+* etc.
 
-Si on veut changer cela, il faut alors encapsuler les Todo dans TodoList, et là, c’est très compliqué à coder. On pourrait faire en sorte que Todo soit une classe interne de TodoList mais ce n’est vraiment pas très lisible, et il faudrait gérer les types de retours. On pourrait demander à TodoList de faire une copie des Todo lors de l’ajout, et là encore cela va rendre le code très compliqué.
-
-### Y-a-t-il un autre problème ?
-
-C’est moins flagrant, mais les deux méthodes getUndoneTodo et getDoneTodo sont en fait des requêtes (des recherches) réalisées sur l’ensemble des Todo. On peut se poser la question de l’intérêt de les mettre dans la classe TodoList car finalement, elles n’ont besoin que d’une seule chose, c’est d’un ensemble de todo (List<Todo>).
+Le DDD vise à remettre le métier au centre de l'application mais aussi à l'intégrer dans le code.
 
 ## Conception DDD
+
+Pour pouvoir appliquer les principes du DDD il faut donc définir avec précision le métier.
+Une fois que celui-ci est précisé, on peut alors écrire un code qui sera parfaitement aligné.
+
+### Quel métier pour la liste des todo ?
+
+
+
+### Conception DDD
 
 La conception DDD est très moderne. Mon objectif est ici de n’en montrer qu’une sous partie. J’ai choisi d’illustrer trois concepts : **Value Object**, **Service** et **Entity**.
 

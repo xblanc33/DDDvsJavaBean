@@ -19,10 +19,6 @@ public class TodoList {
         todoList.add(t);
     }
 
-    public void removeTodo(Todo t) {
-        todoList.remove(t);
-    }
-
     public List<Todo> getUndoneTodo() {
         return getTodo(false);
     }
