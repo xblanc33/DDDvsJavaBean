@@ -3,7 +3,7 @@ package fr.ddd;
 import java.util.Objects;
 
 public class Skill {
-    Name name;
+    private Name name;
 
     public Skill(String name) {
         this.name = new Name(name);
