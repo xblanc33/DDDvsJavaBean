@@ -14,7 +14,9 @@ public class Profile {
 
     public boolean has(Expertise expected) {
         for (Expertise owned : expertiseSet) {
-            if (owned.skill().equals(expected.skill()) && owned.level().greaterThan(expected.level()) return true;
+            boolean sameSkill = owned.skill().equals(expected.skill());
+            boolean ownedLevel = owned.level().greaterThan(expected.level());
+            if ( sameSkill && ownedLevel ) return true;
         }
         return false;
     }

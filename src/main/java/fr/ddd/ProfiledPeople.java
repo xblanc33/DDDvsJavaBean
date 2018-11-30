@@ -32,7 +32,7 @@ public class ProfiledPeople {
         ProfiledPeople otherProfiledPeople = (ProfiledPeople) other;
         boolean sameFirst = first.equals(otherProfiledPeople.first);
         boolean sameLast = last.equals(otherProfiledPeople.last);
-        boolean sameProfile = profile.equals(otherProfiledPeople.profile)
+        boolean sameProfile = profile.equals(otherProfiledPeople.profile);
         return sameFirst && sameLast && sameProfile;
     }
 
